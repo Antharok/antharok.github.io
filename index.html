@@ -1,46 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#000000">
-    <meta name="color-scheme" content="dark only">
-    <meta name="description" content="A Honkai Star Rail optimizer, relic scorer, damage calculator, and various other tools for building and showcasing characters.">
-    <title>Fribbels Star Rail Optimizer</title>
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website"/>
-    <meta property="og:url" content="https://fribbels.github.io/hsr-optimizer/"/>
-    <meta property="og:title" content="Fribbels Star Rail Optimizer"/>
-    <meta property="og:description" content="A Honkai Star Rail optimizer, relic scorer, damage calculator, and various other tools for building and showcasing characters."/>
-    <meta property="og:image" content="https://d28ecrnsw8u0fj.cloudfront.net/assets/misc/metaTagImage.webp"/>
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image"/>
-    <meta property="twitter:url" content="https://fribbels.github.io/hsr-optimizer/"/>
-    <meta property="twitter:title" content="Fribbels Star Rail Optimizer"/>
-    <meta property="twitter:description" content="A Honkai Star Rail optimizer, relic scorer, damage calculator, and various other tools for building and showcasing characters."/>
-    <meta property="twitter:image" content="https://d28ecrnsw8u0fj.cloudfront.net/assets/misc/metaTagImage.webp"/>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Buff Calculator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1>Hero Buff Calculator</h1>
+    <p>Select your team of 15 heroes:</p>
+    
+    <!-- Team selection form -->
+    <form id="team-form">
+        <label for="hero1">Hero 1: </label>
+        <select id="hero1" name="hero1">
+            <!-- Add your hero options here -->
+        </select>
+        <label for="hero2">Hero 2: </label>
+        <select id="hero2" name="hero2">
+            <!-- Add your hero options here -->
+        </select>
+        <!-- Add more heroes up to 15 -->
+        <button type="submit">Calculate Buffs</button>
+    </form>
 
-  <noscript>You need to enable JavaScript to run this app.</noscript>
+    <h2>Calculated Buffs:</h2>
+    <div id="buffs">
+        <!-- Display the calculated buffs here -->
+    </div>
 
-  <!-- Content -->
-  <header>
-    <h1>Fribbels Star Rail Optimizer</h1>
-    <p>Your one-stop tool for optimizing and showcasing characters in Honkai Star Rail!</p>
-  </header>
-
-  <main>
-    <p>This website provides tools for relic scoring, damage calculations, and more!</p>
-    <p>Coming soon: Interactive features for building your best characters!</p>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Fribbels Star Rail Optimizer</p>
-  </footer>
-
+    <script src="script.js"></script>
 </body>
 </html>
