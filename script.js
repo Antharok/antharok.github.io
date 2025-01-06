@@ -6,41 +6,41 @@ function fetchCSVData() {
     fetch(csvUrl)
         .then(response => response.text())
         .then(data => {
-            // Parse CSV data
             const rows = data.split("\n");
-            const heroNames = [];
             const heroBuffs = {};
+            let currentHero = null;
+            let buffCategories = [];
 
             rows.forEach((row, index) => {
                 const cells = row.split(",");
 
-                // The first row will have the hero names
-                if (index === 0) {
-                    for (let i = 1; i < cells.length; i++) {
-                        if (cells[i].trim()) {
-                            heroNames.push(cells[i].trim());
-                            heroBuffs[cells[i].trim()] = {}; // Initialize an empty object for each hero
-                        }
-                    }
+                // Identify the hero name (rows with hero names)
+                if (cells[0].trim()) {
+                    currentHero = cells[0].trim();  // Hero's name is the first cell in each section
+                    heroBuffs[currentHero] = {}; // Initialize an empty object for the hero's buffs
                 }
 
-                // Subsequent rows will have the buffs for each hero
-                if (index > 1) {
+                // The second row after the hero name contains the buff categories (Stat Boost, etc.)
+                if (index === 1 && currentHero) {
+                    buffCategories = cells.slice(1); // Buff categories start from the second column onward
+                }
+
+                // The next row (after the buff categories) contains the values for each hero's buffs
+                if (index > 1 && currentHero && cells[0].trim() === "") {
                     for (let i = 1; i < cells.length; i++) {
-                        const buffType = rows[1].split(",")[i].trim(); // Get the buff type from the second row
-                        if (heroNames[i - 1] && buffType && cells[i].trim()) {
-                            heroBuffs[heroNames[i - 1]][buffType] = cells[i].trim();
+                        if (buffCategories[i - 1] && cells[i].trim()) {
+                            heroBuffs[currentHero][buffCategories[i - 1]] = cells[i].trim();
                         }
                     }
                 }
             });
 
-            // Populate dropdowns with heroes
-            populateHeroDropdown(heroNames);
+            // After parsing the CSV, populate the hero dropdowns
+            populateHeroDropdown(Object.keys(heroBuffs));
         });
 }
 
-// Populate hero dropdowns with hero names
+// Populate hero dropdowns dynamically
 function populateHeroDropdown(heroNames) {
     const hero1Dropdown = document.getElementById("hero1");
     const hero2Dropdown = document.getElementById("hero2");
@@ -58,7 +58,7 @@ function populateHeroDropdown(heroNames) {
     });
 }
 
-// Calculate the buffs based on selected heroes
+// Calculate the buffs for the selected heroes
 function calculateBuffs() {
     const hero1 = document.getElementById('hero1').value;
     const hero2 = document.getElementById('hero2').value;
@@ -70,7 +70,7 @@ function calculateBuffs() {
         if (heroBuffs[hero]) {
             for (const [buffType, value] of Object.entries(heroBuffs[hero])) {
                 if (!buffs[buffType]) buffs[buffType] = 0;
-                buffs[buffType] += parseFloat(value);
+                buffs[buffType] += parseFloat(value) || 0;  // Handle empty or invalid values
             }
         }
     });
@@ -93,3 +93,4 @@ document.getElementById('team-form').addEventListener('submit', function (e) {
 // Initial load of CSV data
 let heroBuffs = {};
 fetchCSVData();
+
