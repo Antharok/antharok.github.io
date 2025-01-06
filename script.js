@@ -1,4 +1,4 @@
-// Function to fetch CSV data from GitHub
+/// Function to fetch CSV data from GitHub
 function fetchCSVData() {
     // Corrected URL with properly encoded special characters
     fetch('https://raw.githubusercontent.com/Antharok/antharok.github.io/main/data/Antharok\'s%20Skia%20Team%20Builder%20-%20Database.csv')  
@@ -18,14 +18,20 @@ function parseCSV(data) {
     const rows = data.split("\n");  // Split data into rows by newline
     const parsedData = [];
 
-    rows.forEach(row => {
+    // Iterate over rows to extract valid hero names
+    rows.forEach((row) => {
         const columns = row.split(",");  // Split each row into columns by comma
-        const heroName = columns[0]; // Assuming the first column contains the hero name
-        if (heroName && heroName !== '') {
-            parsedData.push(heroName);  // Add each hero's name to the array
+
+        // Extract hero names from the first column (e.g., Aaron, Agni Soldier, etc.)
+        const heroName = columns[0];  // Hero name is in the first column (adjust if needed)
+
+        // Add hero name to the array if it's a valid name (skip rows that don't have a hero name)
+        if (heroName && heroName.trim() !== '' && columns.length > 1) {
+            parsedData.push(heroName.trim());  // Add hero's name to the array, trimming whitespace
         }
     });
 
+    console.log("Parsed Buffs:", parsedData);  // Log parsed hero names for debugging
     return parsedData;
 }
 
