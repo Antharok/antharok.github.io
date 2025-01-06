@@ -6,6 +6,8 @@ function fetchCSVData() {
     fetch(csvUrl)
         .then(response => response.text())
         .then(data => {
+            console.log('CSV Data Loaded:', data);  // Log the raw CSV data to check if it's fetched
+
             const rows = data.split("\n");
             const heroBuffs = {};
             let currentHero = null;
@@ -35,6 +37,8 @@ function fetchCSVData() {
                 }
             });
 
+            console.log('Parsed Buffs:', heroBuffs);  // Log parsed buffs data to check
+
             // After parsing the CSV, populate the hero dropdowns
             populateHeroDropdown(Object.keys(heroBuffs));
         });
@@ -42,6 +46,8 @@ function fetchCSVData() {
 
 // Populate hero dropdowns dynamically
 function populateHeroDropdown(heroNames) {
+    console.log('Populating dropdown with heroes:', heroNames);  // Log to check which heroes are being populated
+
     const hero1Dropdown = document.getElementById("hero1");
     const hero2Dropdown = document.getElementById("hero2");
 
@@ -57,6 +63,7 @@ function populateHeroDropdown(heroNames) {
         hero2Dropdown.appendChild(option2);
     });
 }
+
 
 // Calculate the buffs for the selected heroes
 function calculateBuffs() {
