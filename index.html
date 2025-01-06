@@ -3,24 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Website</title>
+  <title>My Google Sheets Data</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Welcome to My Test Website</h1>
-  </header>
 
-  <main>
-    <p>This is a simple webpage made as a test.</p>
-    <button id="clickButton">Click Me!</button>
-    <p id="message"></p>
-  </main>
+  <h1>Google Sheets Data</h1>
+  <table id="data-table">
+    <thead>
+      <tr>
+        <th>Column 1</th>
+        <th>Column 2</th>
+        <th>Column 3</th>
+        <!-- Add more columns if needed -->
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-  <footer>
-    <p>&copy; 2025 My Test Website</p>
-  </footer>
+  <script>
+    // URL of the published Google Sheets data in CSV format
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQMBoWYSHdXHICSbvzdazS5Cn59lx81TPPyXK0H9e158G_zTe2AeGkmFPnULA1O-X7VdGJYvJGrJrKi/pub?output=csv';
 
-  <script src="script.js"></script>
+    // Fetch CSV and convert it into an array of rows
+    fetch(csvUrl)
+      .then(response => response.text())
+      .then(data => {
+        const rows = data.split("\n");
+        const table = document.querySelector("#data-table tbody");
+        
+        rows.forEach((row, index) => {
+          if (row.trim() === "") return; // Skip empty rows
+          
+          const cells = row.split(",");
+          const tr = document.createElement("tr");
+          
+          cells.forEach(cell => {
+            const td = document.createElement("td");
+            td.textContent = cell.trim();
+            tr.appendChild(td);
+          });
+          
+          table.appendChild(tr);
+        });
+      });
+  </script>
+
 </body>
 </html>
