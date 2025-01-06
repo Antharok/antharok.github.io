@@ -1,53 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Google Sheets Data</title>
-  <link rel="stylesheet" href="style.css">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NTQSZLBGGL"></script>
+    <script>
+      try {
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-NTQSZLBGGL');
+      } catch (e) {
+        console.error(e)
+      }
+    </script>
+
+    <meta charset="utf-8"/>
+
+    <link href="/favicon.ico" rel="icon"/>
+    <meta content="#000000" name="theme-color"/>
+    <meta content="dark only" name="color-scheme">
+    <meta content="A Honkai Star Rail optimizer, relic scorer, damage calculator, and various other tools for building and showcasing characters."
+          name="description"
+    />
+    <link href="/logo192.png" rel="apple-touch-icon"/>
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link href="/manifest.json" rel="manifest"/>
+    <!--
+      Notice the use of  in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+
+    <title>Fribbels Star Rail Optimizer</title>
+    <meta content="Fribbels Star Rail Optimizer" name="title"/>
+    <meta content="A Honkai Star Rail optimizer, relic scorer, damage calculator, and various other tools for building and showcasing characters"
+          name="description"/>
+
+    <!-- Open Graph / Facebook -->
+    <meta content="website" property="og:type"/>
+    <meta content="https://fribbels.github.io/hsr-optimizer/" property="og:url"/>
+    <meta content="Fribbels Star Rail Optimizer" property="og:title"/>
+    <meta content="A Honkai Star Rail optimizer, relic scorer, damage calculator, and various other tools for building and showcasing characters."
+          property="og:description"/>
+    <meta content="https://d28ecrnsw8u0fj.cloudfront.net/assets/misc/metaTagImage.webp" property="og:image"/>
+
+    <!-- Twitter -->
+    <meta content="summary_large_image" property="twitter:card"/>
+    <meta content="https://fribbels.github.io/hsr-optimizer/" property="twitter:url"/>
+    <meta content="Fribbels Star Rail Optimizer" property="twitter:title"/>
+    <meta content="A Honkai Star Rail optimizer, relic scorer, damage calculator, and various other tools for building and showcasing characters."
+          property="twitter:description"/>
+    <meta content="https://d28ecrnsw8u0fj.cloudfront.net/assets/misc/metaTagImage.webp" property="twitter:image"/>
+
 </head>
 <body>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="root"></div>
+<!--
+  This HTML file is a template.
+  If you open it directly in the browser, you will see an empty page.
 
-  <h1>Google Sheets Data</h1>
-  <table id="data-table">
-    <thead>
-      <tr>
-        <th>Column 1</th>
-        <th>Column 2</th>
-        <th>Column 3</th>
-        <!-- Add more columns if needed -->
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  You can add webfonts, meta tags, or analytics to this file.
+  The build step will place the bundled scripts into the <body> tag.
 
-  <script>
-    // URL of the published Google Sheets data in CSV format
-    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQMBoWYSHdXHICSbvzdazS5Cn59lx81TPPyXK0H9e158G_zTe2AeGkmFPnULA1O-X7VdGJYvJGrJrKi/pub?output=csv';
-
-    // Fetch CSV and convert it into an array of rows
-    fetch(csvUrl)
-      .then(response => response.text())
-      .then(data => {
-        const rows = data.split("\n");
-        const table = document.querySelector("#data-table tbody");
-        
-        rows.forEach((row, index) => {
-          if (row.trim() === "") return; // Skip empty rows
-          
-          const cells = row.split(",");
-          const tr = document.createElement("tr");
-          
-          cells.forEach(cell => {
-            const td = document.createElement("td");
-            td.textContent = cell.trim();
-            tr.appendChild(td);
-          });
-          
-          table.appendChild(tr);
-        });
-      });
-  </script>
-
+  To begin the development, run `npm start` or `yarn start`.
+  To create a production bundle, use `npm run build` or `yarn build`.
+-->
+<script src="/src/index.tsx" type="module"></script>
 </body>
 </html>
