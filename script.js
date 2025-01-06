@@ -1,103 +1,59 @@
-// Example: Fetch CSV data from Google Sheets
-const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQMBoWYSHdXHICSbvzdazS5Cn59lx81TPPyXK0H9e158G_zTe2AeGkmFPnULA1O-X7VdGJYvJGrJrKi/pub?gid=2114190030&single=true&output=csv';
-
-// Fetch and process CSV data
+// Function to fetch CSV data from GitHub
 function fetchCSVData() {
-    fetch(csvUrl)
-        .then(response => response.text())
+    // Corrected URL with properly encoded special characters
+    fetch('https://raw.githubusercontent.com/Antharok/antharok.github.io/main/data/Antharok\'s%20Skia%20Team%20Builder%20-%20Database.csv')  
+        .then(response => response.text())  // Convert response to text
         .then(data => {
-            console.log('CSV Data Loaded:', data);  // Log the raw CSV data to check if it's fetched
-
-            const rows = data.split("\n");
-            const heroBuffs = {};
-            let currentHero = null;
-            let buffCategories = [];
-
-            rows.forEach((row, index) => {
-                const cells = row.split(",");
-
-                // Identify the hero name (rows with hero names)
-                if (cells[0].trim()) {
-                    currentHero = cells[0].trim();  // Hero's name is the first cell in each section
-                    heroBuffs[currentHero] = {}; // Initialize an empty object for the hero's buffs
-                }
-
-                // The second row after the hero name contains the buff categories (Stat Boost, etc.)
-                if (index === 1 && currentHero) {
-                    buffCategories = cells.slice(1); // Buff categories start from the second column onward
-                }
-
-                // The next row (after the buff categories) contains the values for each hero's buffs
-                if (index > 1 && currentHero && cells[0].trim() === "") {
-                    for (let i = 1; i < cells.length; i++) {
-                        if (buffCategories[i - 1] && cells[i].trim()) {
-                            heroBuffs[currentHero][buffCategories[i - 1]] = cells[i].trim();
-                        }
-                    }
-                }
-            });
-
-            console.log('Parsed Buffs:', heroBuffs);  // Log parsed buffs data to check
-
-            // After parsing the CSV, populate the hero dropdowns
-            populateHeroDropdown(Object.keys(heroBuffs));
+            console.log("CSV Data loaded:", data);
+            const parsedData = parseCSV(data);  // Parse the CSV data into a usable format
+            populateDropdown(parsedData);  // Populate the dropdown menus with hero names
+        })
+        .catch(error => {
+            console.error("Error fetching the CSV file:", error);
         });
 }
 
-// Populate hero dropdowns dynamically
-function populateHeroDropdown(heroNames) {
-    console.log('Populating dropdown with heroes:', heroNames);  // Log to check which heroes are being populated
+// Function to parse CSV data into an array of heroes
+function parseCSV(data) {
+    const rows = data.split("\n");  // Split data into rows by newline
+    const parsedData = [];
 
-    const hero1Dropdown = document.getElementById("hero1");
-    const hero2Dropdown = document.getElementById("hero2");
-
-    heroNames.forEach(hero => {
-        const option1 = document.createElement("option");
-        option1.value = hero;
-        option1.text = hero;
-        hero1Dropdown.appendChild(option1);
-
-        const option2 = document.createElement("option");
-        option2.value = hero;
-        option2.text = hero;
-        hero2Dropdown.appendChild(option2);
-    });
-}
-
-
-// Calculate the buffs for the selected heroes
-function calculateBuffs() {
-    const hero1 = document.getElementById('hero1').value;
-    const hero2 = document.getElementById('hero2').value;
-
-    const selectedHeroes = [hero1, hero2];
-    const buffs = {};
-
-    selectedHeroes.forEach(hero => {
-        if (heroBuffs[hero]) {
-            for (const [buffType, value] of Object.entries(heroBuffs[hero])) {
-                if (!buffs[buffType]) buffs[buffType] = 0;
-                buffs[buffType] += parseFloat(value) || 0;  // Handle empty or invalid values
-            }
+    rows.forEach(row => {
+        const columns = row.split(",");  // Split each row into columns by comma
+        const heroName = columns[0]; // Assuming the first column contains the hero name
+        if (heroName && heroName !== '') {
+            parsedData.push(heroName);  // Add each hero's name to the array
         }
     });
 
-    // Display the calculated buffs
-    let resultHTML = '';
-    for (const [buffType, totalBuff] of Object.entries(buffs)) {
-        resultHTML += `<p><strong>${buffType}:</strong> ${totalBuff}</p>`;
-    }
-
-    document.getElementById('buffs').innerHTML = resultHTML;
+    return parsedData;
 }
 
-// Event listener for form submission
-document.getElementById('team-form').addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent form submission
-    calculateBuffs();
-});
+// Function to populate the dropdown menu with hero names
+function populateDropdown(heroes) {
+    for (let i = 1; i <= 15; i++) {
+        const dropdown = document.getElementById('hero' + i);  // Select the dropdown by its ID
+        // Clear existing options
+        dropdown.innerHTML = '';
 
-// Initial load of CSV data
-let heroBuffs = {};
-fetchCSVData();
+        // Add a default option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Select Hero ' + i;
+        dropdown.appendChild(defaultOption);
+
+        // Add each hero to the dropdown options
+        heroes.forEach(heroName => {
+            const option = document.createElement('option');
+            option.value = heroName;
+            option.textContent = heroName;
+            dropdown.appendChild(option);
+        });
+    }
+}
+
+// Run the fetch function when the page is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    fetchCSVData();
+});
 
