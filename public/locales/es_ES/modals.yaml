@@ -1,8 +1,0 @@
-EditCharacter:
-  Character: Personaje
-ScoreFooter:
-  TeamOptions:
-    Custom: Personalizado
-CharacterSelect:
-  SingleSelect:
-    Placeholder: Personaje
