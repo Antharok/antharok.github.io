@@ -1,0 +1,53 @@
+name: drearyquibbles
+
+on:
+  push:
+    branches: [ beta ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: pandoc/latex    # "ubuntu" is a more generic container, using "pandoc/latex" because of dependencies, used in the specific "build.sh"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find and Replace homepage
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "\"homepage\": \"https://fribbels.github.io/hsr-optimizer\""
+          replace: "\"homepage\": \"https://fribbels.github.io/dreary-quibbles\""
+          include: "package.json"
+      - name: Add in-Context script tags
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "<!--CROWDIN_IN-CONTEXT_SCRIPT-->"
+          replace: "<script type=\"text/javascript\">var _jipt = [];_jipt.push([ 'project', 'hsr-optimizer' ]);_jipt.push(['start_type', 'manual']);</script><script type=\"text/javascript\" src=\"//cdn.crowdin.com/jipt/jipt.js\"></script>"
+          include: "index.html"
+      - name: Find and Replace vite page
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "base: '/hsr-optimizer'"
+          replace: "base: '/dreary-quibbles'"
+          include: "vite.config.ts"
+      - name: Find and Replace router path
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "const BASE_PATH: BasePath = BasePath.MAIN"
+          replace: "const BASE_PATH: BasePath = BasePath.BETA"
+          include: "src/lib/state/db.ts"
+      - name: Find and Replace Beta header
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "Fribbels Honkai Star Rail Optimizer"
+          replace: "Fribbels Honkai Star Rail Optimizer (Beta)"
+          include: "src/lib/layout/LayoutHeader.tsx"
+      - run: rm -rf .github/workflows
+      - run: mv .github/drearyquibbles .github/workflows
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+        with:
+          source-directory: '.'
+          destination-github-username: 'fribbels'
+          destination-repository-name: 'dreary-quibbles'
+          target-branch: main

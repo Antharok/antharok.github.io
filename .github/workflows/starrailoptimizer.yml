@@ -1,0 +1,55 @@
+name: starrailoptimizer
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: pandoc/latex    # "ubuntu" is a more generic container
+    # using "pandoc/latex" because of dependencies
+    # used in the specific "build.sh"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find and Replace homepage
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "\"homepage\": \"https://fribbels.github.io/hsr-optimizer\""
+          replace: "\"homepage\": \"https://starrailoptimizer.github.io\""
+          include: "package.json"
+      - name: Find and Replace vite page
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "base: '/hsr-optimizer'"
+          replace: "base: ''"
+          include: "vite.config.ts"
+      - name: Find and Replace router path
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "const BASE_PATH: BasePath = BasePath.MAIN"
+          replace: "const BASE_PATH = ''"
+          include: "src/lib/state/db.ts"
+      - name: Find and Replace Beta header
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "Fribbels Honkai Star Rail Optimizer"
+          replace: "Fribbels Honkai Star Rail Optimizer (No leaks)"
+          include: "src/lib/layout/LayoutHeader.tsx"
+      - name: Find and Replace officialOnly
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "export const officialOnly = false"
+          replace: "export const officialOnly = true"
+          include: "src/lib/constants/constants.ts"
+      - run: rm -rf .github/workflows
+      - run: mv .github/starrailoptimizer .github/workflows
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.STAR_RAIL_OPTIMIZER_SSH_DEPLOY_KEY }}
+        with:
+          source-directory: '.'
+          destination-github-username: 'starrailoptimizer'
+          destination-repository-name: 'starrailoptimizer.github.io'
+          target-branch: main
